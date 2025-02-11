@@ -98,7 +98,7 @@ class TopLevelMetaData:
 
     def update_root(self, root):
         for key, value in self.dict().items():
-            if value != "":
+            if value is not None and value != "":
                 root.set(key, value)
         return root
 

@@ -9,11 +9,13 @@ class ModelicaStandard:
         "ssb": "http://ssp-standard.org/SSP1/SystemStructureSignalDictionary",
         "ssm": "http://ssp-standard.org/SSP1/SystemStructureParameterMapping",
         "ssd": "http://ssp-standard.org/SSP1/SystemStructureDescription",
-        # SRMD
+        # SSP Traceability
         "stc": "http://ssp-standard.org/SSPTraceability1/SSPTraceabilityCommon",
         "srmd": "http://ssp-standard.org/SSPTraceability1/SimulationResourceMetaData",
+        "stmd": "http://ssp-standard.org/SSPTraceability1/SimulationTaskMetaData",
+        "dtmd": "http://ssp-standard.org/SSPTraceability1/DecisionTaskMetaData",
         # FMI
-        "fmi30": "",
+        # "fmi30": "",
         # XLink
         "xlink": "http://www.w3.org/1999/xlink"
     }
@@ -27,9 +29,11 @@ class ModelicaStandard:
         "ssm": __resource_path / "SystemStructureParameterMapping.xsd",
         "ssv": __resource_path / "SystemStructureParameterValues.xsd",
         "ssb": __resource_path / "SystemStructureSignalDictionary.xsd",
-        # SSPTraceabillity
+        # SSP Traceabillity
         "stc11": __resource_path / "STC11.xsd",
         "srmd11": __resource_path / "SRMD11.xsd",
+        "stmd11": __resource_path / "STMD11.xsd",
+        "dtmd11": __resource_path / "DTMD11.xsd",
         # FMI
         "fmi30": __resource_path / "fmi30" / "fmi3ModelDescription.xsd",
     }

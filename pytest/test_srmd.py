@@ -40,6 +40,8 @@ def test_read_write_srmd_simple(write_file):
 
         file.add_classification(classification)
 
+        file.__check_compliance__()
+
     with SRMD(write_file) as file:
         assert len(file.classifications) == 1
         classification = file.classifications[0]
@@ -66,6 +68,8 @@ def test_read_write_srmd_multiple(write_file):
 
             file.add_classification(classification)
 
+        file.__check_compliance__()
+
     actual = {}
     with SRMD(write_file) as file:
         for classification in file.classifications:
@@ -80,7 +84,7 @@ def test_read_write_srmd_multiple(write_file):
 
 def test_read_write_srmd_duplicate(write_file):
     data = {
-           "com.example.duplicate": [("key1", "value1"), ("key2", "value2")],
+           "com.example.duplicate": [("key1", "value1"), ("key1", "value2")],
             }
 
     with SRMD(write_file, 'w') as file:
@@ -90,6 +94,8 @@ def test_read_write_srmd_duplicate(write_file):
                 classification.add_classification_entry(ClassificationEntry(key, text=value))
 
             file.add_classification(classification)
+
+        file.__check_compliance__()
 
     actual = {}
     with SRMD(write_file) as file:
@@ -117,6 +123,8 @@ def test_read_write_srmd_xml(write_file):
                 ClassificationEntry("key1", type_="application/xml", content=[elem]))
 
         file.add_classification(classification)
+
+        file.__check_compliance__()
 
     with SRMD(write_file) as file:
         assert len(file.classifications) == 1
@@ -150,6 +158,8 @@ def test_read_write_srmd_attrs(write_file):
                 ClassificationEntry("key1", description="Test2", text="Testing"))
 
         file.add_classification(classification)
+
+        file.__check_compliance__()
 
     with SRMD(write_file) as file:
         assert len(file.classifications) == 1
@@ -199,6 +209,8 @@ def test_read_write_srmd_custom_parser(write_file):
             test2="testing2"
         )
         file.add_classification(classification)
+
+        file.__check_compliance__()
 
     with SRMD(write_file) as file:
         assert len(file.classifications) == 1
