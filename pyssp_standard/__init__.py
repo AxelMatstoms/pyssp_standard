@@ -10,3 +10,4 @@ from pyssp_standard.common_content_ssc import Annotations, Annotation
 from pyssp_standard.srmd import SRMD
 from pyssp_standard.traceability import Classification, ClassificationEntry, classification_parser
 from pyssp_standard.stmd import STMD
+from pyssp_standard.dtmd import DTMD
