@@ -33,7 +33,7 @@ class FulfillmentPhase(GPhaseCommon, BaseElement, ModelicaStandard):
     decide_objective_fulfillment: Step
 
 
-class STMD(TaskMetaData):
+class DTMD(TaskMetaData):
     analysis_phase: AnalysisPhase
     definition_phase: DefinitionPhase
     execution_phase: ExecutionPhase
@@ -55,7 +55,7 @@ class STMD(TaskMetaData):
     def __read__(self):
         super().__read__()
 
-        fields = STMD.__annotations__
+        fields = DTMD.__annotations__
         for name, cls in fields.items():
             if (elem := self.root.find(f"dtmd:{cls.__name__}", self.namespaces)) is not None:
                 setattr(self, name, cls(elem, self.resource_manager))
@@ -63,7 +63,7 @@ class STMD(TaskMetaData):
     def __write__(self):
         super().__write__()
 
-        fields = STMD.__annotations__
+        fields = DTMD.__annotations__
         for name, cls in fields.items():
             if (phase := getattr(self, name)) is not None:
                 self.root.append(phase.as_element())

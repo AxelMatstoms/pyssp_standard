@@ -7,7 +7,7 @@ import os
 from lxml import etree as et
 from lxml.etree import QName
 
-from pyssp_standard.utils import ModelicaXMLFile, XMLFile
+from pyssp_standard.utils import ModelicaXMLFile
 from pyssp_standard.standard import ModelicaStandard
 from pyssp_standard.common_content_ssc import BaseElement, TopLevelMetaData
 
