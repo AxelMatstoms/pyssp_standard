@@ -11,3 +11,4 @@ from pyssp_standard.srmd import SRMD
 from pyssp_standard.traceability import Classification, ClassificationEntry, classification_parser
 from pyssp_standard.stmd import STMD
 from pyssp_standard.dtmd import DTMD
+from pyssp_standard.mtmd import MTMD

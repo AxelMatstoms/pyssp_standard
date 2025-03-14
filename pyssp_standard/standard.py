@@ -14,6 +14,7 @@ class ModelicaStandard:
         "srmd": "http://ssp-standard.org/SSPTraceability1/SimulationResourceMetaData",
         "stmd": "http://ssp-standard.org/SSPTraceability1/SimulationTaskMetaData",
         "dtmd": "http://ssp-standard.org/SSPTraceability1/DecisionTaskMetaData",
+        "mtmd": "http://ssp-standard.org/SSPTraceability1/ModelingTaskMetaData",
         # FMI
         # "fmi30": "",
         # XLink
@@ -34,6 +35,7 @@ class ModelicaStandard:
         "srmd11": __resource_path / "SRMD11.xsd",
         "stmd11": __resource_path / "STMD11.xsd",
         "dtmd11": __resource_path / "DTMD11.xsd",
+        "mtmd11": __resource_path / "MTMD11.xsd",
         # FMI
         "fmi30": __resource_path / "fmi30" / "fmi3ModelDescription.xsd",
     }
