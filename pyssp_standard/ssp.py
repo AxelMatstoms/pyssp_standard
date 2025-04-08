@@ -9,6 +9,7 @@ from pyssp_standard.ssb import SSB
 from pyssp_standard.ssv import SSV
 from pyssp_standard.ssm import SSM
 from pyssp_standard.fmu import FMU
+from pyssp_standard.stmd import STMD
 from pyssp_standard.standard import ModelicaStandard
 from pyssp_standard.utils import ZIPFile
 
@@ -68,6 +69,25 @@ SSP:
         Returns a list of available resources in the ssp folder /resources
         """
         return [f for f in self.get_files(self.ssp_resource_path).keys()]
+
+    @property
+    def stmd(self):
+        """Return STMD if present.
+
+        If the SSP is opened as read-only, the STMD file will be opened
+        in read mode if present, else None is returned.
+
+        Otherwise, the STMD file will be opened in either append or
+        write mode if it is present or not respectively.
+        """
+        STMD_PATH = "extra/org.ssp-standard.ssp-traceabiltity.stmd/SimulationTask.stmd"
+        file_present = STMD_PATH in self.files_rel
+
+        if self.readonly and not file_present:
+            return None
+
+        mode = "r" if self.readonly else "a" if file_present else "w"
+        return STMD(self.get_file_temp_path(STMD_PATH), mode=mode)
 
     def add_resource(self, file :Path):
         """
