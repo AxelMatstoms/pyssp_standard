@@ -388,7 +388,7 @@ class Signature(GElementCommon, BaseElement, ModelicaStandard):
     role: str
     type: str
     source: str | None
-    source_base: str  # Issue #92
+    source_base: str
     content: Content | None
 
     def __init__(
@@ -397,7 +397,7 @@ class Signature(GElementCommon, BaseElement, ModelicaStandard):
             role=None,
             type=None,
             source=None,
-            source_base="STC",  # Issue #92, maybe should be 'GlueParticle' by default instead
+            source_base="file",
             content=None,
             signatures=None,
             **kwargs
@@ -438,7 +438,7 @@ class Signature(GElementCommon, BaseElement, ModelicaStandard):
         if self.source is not None:
             element.set("source", self.source)
 
-        if self.source_base != "STC":
+        if self.source_base != "file":
             element.set("sourceBase", self.source_base)
 
         if self.content is not None:
@@ -453,7 +453,7 @@ class Signature(GElementCommon, BaseElement, ModelicaStandard):
 class Summary(GElementCommon, BaseElement, ModelicaStandard):
     type: str
     source: str | None
-    source_base: str  # Issue #92
+    source_base: str
     content: Content | None
     signatures: list[Signature]
 
@@ -462,7 +462,7 @@ class Summary(GElementCommon, BaseElement, ModelicaStandard):
             element=None,
             type=None,
             source=None,
-            source_base="STC",  # Issue #92, maybe should be 'GlueParticle' by default instead
+            source_base="file",
             content=None,
             signatures=None,
             **kwargs
@@ -501,7 +501,7 @@ class Summary(GElementCommon, BaseElement, ModelicaStandard):
         if self.source is not None:
             element.set("source", self.source)
 
-        if self.source_base != "STC":
+        if self.source_base != "file":
             element.set("sourceBase", self.source_base)
 
         if self.content is not None:
@@ -517,7 +517,7 @@ class MetaData(GElementCommon, BaseElement, ModelicaStandard):
     kind: str
     type: str
     source: str | None
-    source_base: str  # Issue #92
+    source_base: str
     content: Content | None
     signatures: list[Signature]
 
@@ -527,7 +527,7 @@ class MetaData(GElementCommon, BaseElement, ModelicaStandard):
             kind=None,
             type=None,
             source=None,
-            source_base="STC",  # Issue #92, maybe should be 'GlueParticle' by default instead
+            source_base="file",
             content=None,
             signatures=None,
             **kwargs
@@ -568,7 +568,7 @@ class MetaData(GElementCommon, BaseElement, ModelicaStandard):
         if self.source is not None:
             element.set("source", self.source)
 
-        if self.source_base != "STC":
+        if self.source_base != "file":
             element.set("sourceBase", self.source_base)
 
         if self.content is not None:
