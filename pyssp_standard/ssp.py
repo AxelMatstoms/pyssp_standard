@@ -83,11 +83,15 @@ SSP:
         STMD_PATH = "extra/org.ssp-standard.ssp-traceabiltity.stmd/SimulationTask.stmd"
         file_present = STMD_PATH in self.files_rel
 
-        if self.readonly and not file_present:
+        if self.mode == "r" and not file_present:
             return None
 
-        mode = "r" if self.readonly else "a" if file_present else "w"
-        return STMD(self.get_file_temp_path(STMD_PATH), mode=mode)
+        # Create directory in extra/ if needed
+        stmd_path = self.get_file_temp_path(STMD_PATH)
+        stmd_path.parent.mkdir(parents=True, exist_ok=True)
+
+        self.mark_changed()
+        return STMD(stmd_path, mode=self.mode)
 
     def add_resource(self, file :Path):
         """

@@ -325,6 +325,12 @@ class DerivationChain(BaseElement, ModelicaStandard):
         self.update({"id": element.get("id", ""), "description": element.get("description", "")})
         self.entries = [DerivationChainEntry(child) for child in element]
 
+    def __len__(self):
+        return len(self.entries)
+
+    def __getitem__(self, idx):
+        return self.entries[idx]
+
     def add_chain_entry(self, **kwargs):
         """ Add a DerivationChainEntry.
 
@@ -1186,7 +1192,7 @@ class TaskMetaData(ModelicaXMLFile):
 
     def add_derivation_chain_entry(self):
         if self.general_information is None:
-            self.general_information = GeneralInformation()
+            self.general_information = GeneralInformation(ns=self.namespaces[self.ns])
 
         if self.general_information.derivation_chain is None:
             self.general_information.derivation_chain = DerivationChain()
