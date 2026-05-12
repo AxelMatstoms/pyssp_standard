@@ -7,6 +7,9 @@ import zipfile
 import xmlschema
 import os
 import warnings
+from dataclasses import fields
+from operator import attrgetter
+
 from lxml import etree as ET
 
 from pyssp_standard.common_content_ssc import Annotations, Annotation, BaseElement, TopLevelMetaData
@@ -343,3 +346,31 @@ class EmptyElement(ET.ElementBase):
 
     def __repr__(self):
         return ET.tostring(self, encoding="utf-8")
+
+
+def wraps_dataclass(wrapped_class, local_name):
+    """ Add proxy properties for a dataclass.
+
+    SSV and SSM can be both inline and in their own files. This
+    decorator helps remove the coupling between SSM, SSV element trees
+    and SSM, SSV files by representing an element tree in a dataclass.
+    The file object (SSV, SSM) then simply wraps that dataclass. The
+    user, of course, wants to access fields directly, like this:
+    >>> ssm = SSM(...)
+    >>> ssm.entries
+
+    This decorator creates properties for all the fields in the wrapped
+    dataclass that access the value from the underlying element.
+    """
+    def decorator(cls):
+        for field_ in fields(wrapped_class):
+            name = field_.name
+
+            def setter(self, value):
+                setattr(self, f"{local_name}.{name}", value)
+
+            setattr(cls, name, property(attrgetter(f"{local_name}.{name}"), setter))
+
+        return cls
+
+    return decorator

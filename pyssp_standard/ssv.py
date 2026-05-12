@@ -1,6 +1,5 @@
-from dataclasses import dataclass, field, fields
+from dataclasses import dataclass, field
 from typing import TypedDict, List
-from operator import attrgetter
 
 from lxml.etree import QName
 from lxml import etree as ET
@@ -9,7 +8,7 @@ from pyssp_standard.common_content_ssc import Enumerations, BaseElement, TopLeve
 from pyssp_standard.parameter_types import ParameterType
 
 from pyssp_standard.unit import BaseUnit, Unit, Units
-from pyssp_standard.utils import ModelicaXMLFile
+from pyssp_standard.utils import ModelicaXMLFile, wraps_dataclass
 from pyssp_standard.standard import ModelicaStandard
 from pyssp_standard.unit_conversion import generate_base_unit
 
@@ -84,21 +83,6 @@ class SSVElem(ModelicaStandard):
             root.append(self.enumerations.as_element())
 
         return root
-
-
-def wraps_dataclass(wrapped_class, local_name):
-    def decorator(cls):
-        for field_ in fields(wrapped_class):
-            name = field_.name
-
-            def setter(self, value):
-                setattr(self, f"{local_name}.{name}", value)
-
-            setattr(cls, name, property(attrgetter(f"{local_name}.{name}"), setter))
-
-        return cls
-
-    return decorator
 
 
 @wraps_dataclass(SSVElem, local_name="ssv_elem")
