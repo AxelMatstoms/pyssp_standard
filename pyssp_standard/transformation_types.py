@@ -5,6 +5,16 @@ from lxml.etree import QName
 from pyssp_standard.standard import ModelicaStandard
 
 
+_TRANSFORMATION_ALTERNATIVES = [
+    "ssc:LinearTransformation",
+    "ssc:BooleanMappingTransformation",
+    "ssc:IntegerMappingTransformation",
+    "ssc:EnumerationMappingTransformation"
+]
+
+TRANSFORMATION_CHOICE_XPATH = "|".join(_TRANSFORMATION_ALTERNATIVES)
+
+
 class Transformation(ModelicaStandard):
 
     def __init__(self, transformation_type=None, attributes=None, transformation: ET.Element = None):

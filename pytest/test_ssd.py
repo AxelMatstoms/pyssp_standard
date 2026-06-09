@@ -21,9 +21,13 @@ def modify_file():
 
 @pytest.fixture
 def write_file():
+    # TODO: switch to delete_on_close=False when targeting py3.12+
     with tempfile.NamedTemporaryFile(delete=False) as f:
         f.close()
         yield f.name
+
+        # Cleanup
+        Path(f.name).unlink()
 
 
 def test_compliance_check(read_file):

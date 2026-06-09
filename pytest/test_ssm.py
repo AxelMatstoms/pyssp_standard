@@ -1,8 +1,11 @@
 import pytest
 from pathlib import Path
+import tempfile
+
+from lxml.etree import _Element
+
 from pyssp_standard.ssm import SSM
 from pyssp_standard.transformation_types import Transformation
-from lxml.etree import _Element
 
 
 @pytest.fixture
@@ -12,9 +15,13 @@ def read_file():
 
 @pytest.fixture
 def write_file():
-    test_file = Path("./test.ssm")
-    yield test_file
-    test_file.unlink()
+    # TODO: switch to delete_on_close=False when targeting py3.12+
+    with tempfile.NamedTemporaryFile(delete=False) as f:
+        f.close()
+        yield f.name
+
+        # Cleanup
+        Path(f.name).unlink()
 
 
 def test_read_correct_file(read_file):  # Asserts that reading a known correct file does not raise an exception

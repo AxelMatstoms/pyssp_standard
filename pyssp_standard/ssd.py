@@ -1,6 +1,9 @@
 from collections import defaultdict
 from dataclasses import dataclass, field
 
+from lxml import etree as ET
+from lxml.etree import QName
+
 from pyssp_standard.common_content_ssc import (
     Enumerations,
     Annotations,
@@ -13,8 +16,7 @@ from pyssp_standard.unit import Units
 from pyssp_standard.utils import ModelicaXMLFile
 from pyssp_standard.standard import ModelicaStandard
 from pyssp_standard.ssv import SSVElem
-from lxml import etree as ET
-from lxml.etree import QName
+from pyssp_standard.ssm import SSMElem
 
 _ALLOWED_CONNECTIONS = {
     ("System", "parameter", "System", "calculatedParameter"),
@@ -204,6 +206,46 @@ class Element(ModelicaStandard):
 
 
 @dataclass
+class ParameterMapping(ModelicaStandard):
+    base_element: BaseElement = field(default_factory=BaseElement)
+    type: str = "application/x-ssp-parameter-mapping"
+    source: str | None = None
+    source_base: str = "SSD"
+    ssm: SSMElem | None = None
+
+    @classmethod
+    def from_xml(cls, elem):
+        base_element = BaseElement()
+        base_element.update(elem.attrib)
+
+        type_ = elem.get("type", "application/x-ssp-parameter-mapping")
+        source = elem.get("source")
+        source_base = elem.get("sourceBase", "SSD")
+        ssm = elem.find("ssm:ParameterMapping", cls.namespaces)
+
+        return cls(base_element, type_, source, source_base, ssm)
+
+    def to_xml(self):
+        root = ET.Element(
+            QName(self.namespaces["ssd"], 'ParameterMapping'),
+        )
+        self.base_element.update(root.attrib)
+        if self.type != "application/x-ssp-parameter-mapping":
+            root.set("type", self.type)
+
+        if self.source is not None:
+            root.set("source", self.source)
+
+        if self.source_base != "SSD":
+            root.set("sourceBase", self.source_base)
+
+        if self.ssm is not None:
+            root.append(self.ssm.to_xml())
+
+        return root
+
+
+@dataclass
 class ParameterBinding(ModelicaStandard):
     base_element: BaseElement = field(default_factory=BaseElement)
     type: str = "application/x-ssp-parameter-set"
@@ -211,7 +253,7 @@ class ParameterBinding(ModelicaStandard):
     source_base: str = "SSD"
     prefix: str | None = None
     ssv: SSVElem | None = None
-    # TODO: support for parameter mapping
+    parameter_mapping: ParameterMapping | None = None
 
     @classmethod
     def from_xml(cls, elem):
@@ -225,9 +267,13 @@ class ParameterBinding(ModelicaStandard):
         parameter_values = elem.find("ssd:ParameterValues", cls.namespaces)
         ssv = None
         if parameter_values is not None:
-            ssv = parameter_values.find("ssv:ParameterSet", cls.namespaces)
+            ssv = SSVElem.from_xml(parameter_values.find("ssv:ParameterSet", cls.namespaces))
 
-        return cls(base_element, type_, source, source_base, prefix, ssv)
+        parameter_mapping = elem.find("ssd:ParameterMapping", cls.namespaces)
+        if parameter_mapping is not None:
+            parameter_mapping = ParameterMapping.from_xml(parameter_mapping)
+
+        return cls(base_element, type_, source, source_base, prefix, ssv, parameter_mapping)
 
     def to_xml(self):
         root = ET.Element(
@@ -249,6 +295,9 @@ class ParameterBinding(ModelicaStandard):
         if self.ssv is not None:
             parameter_values = ET.SubElement(root, QName(self.namespaces["ssd"], "ParameterValues"))
             parameter_values.append(self.ssv.to_xml())
+
+        if self.parameter_mapping is not None:
+            root.append(self.parameter_mapping.to_xml())
 
         return root
 
